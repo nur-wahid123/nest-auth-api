@@ -8,12 +8,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { UserLoginDto } from './dto/login-user.dto';
 import { Request, Response } from 'express';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { User } from 'src/user/entities/user.entity';
+import { CreateUserDto } from 'src/modules/user/dto/create-user.dto';
 import { Token } from 'src/common/types/token.type';
+import { User } from 'src/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
