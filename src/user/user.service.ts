@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -8,6 +8,21 @@ import { genSalt, hash } from 'bcrypt';
 
 @Injectable()
 export class UserService {
+  async isUsernameAndEmailExist(
+    username: string,
+    email: string,
+  ): Promise<boolean> {
+    const isUsernameExists = await this.isUsernameExists(username);
+    if (isUsernameExists) {
+      throw new BadRequestException('Username already in used2');
+    }
+    const isEmailExists = await this.isEmailExists(email);
+    if (isEmailExists) {
+      throw new BadRequestException('Email already in used');
+    }
+    if (isEmailExists && isUsernameExists) return true;
+    return false;
+  }
   /**
    * Here, we have used data mapper approch for this tutorial that is why we
    * injecting repository here. Another approch can be Active records.
@@ -41,11 +56,16 @@ export class UserService {
   }
 
   async isUsernameExists(username: string): Promise<boolean> {
-    return (await this.userRepository.findOneBy({ username })) ? true : false;
+    const user = await this.userRepository.findOneBy({ username });
+    console.log(user);
+
+    return user != null ? true : false;
   }
 
   async isEmailExists(email: string): Promise<boolean> {
-    return (await this.userRepository.findOneBy({ email })) ? true : false;
+    return (await this.userRepository.findOneBy({ email })) != null
+      ? true
+      : false;
   }
 
   /**

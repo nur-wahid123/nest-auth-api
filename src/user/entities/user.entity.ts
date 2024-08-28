@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { Post } from 'src/user/entities/post.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -21,6 +23,7 @@ export class User {
   age: number;
 
   @Column({ type: 'varchar' })
+  @Exclude()
   password: string;
 
   @Column({ type: 'enum', enum: ['m', 'f', 'u'] })
@@ -30,4 +33,7 @@ export class User {
    * u - unspecified
    */
   gender: string;
+
+  @OneToMany(() => Post, (post) => post.user, { cascade: true })
+  posts: Post[];
 }
