@@ -1,11 +1,23 @@
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { Post } from './post.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Comment } from './comment.entity';
 
 @Entity()
 export class User {
   /**
-   * this decorator will help to auto generate id for the table.
+   * Columns
    */
   @PrimaryGeneratedColumn()
   id: number;
@@ -34,6 +46,57 @@ export class User {
    */
   gender: string;
 
-  @OneToMany(() => Post, (post) => post.user, { cascade: true })
+  /**
+   * Relations
+   */
+
+  @OneToMany(() => Post, (post) => post.creatorId, { cascade: true })
   posts: Post[];
+
+  @OneToOne(() => Comment, (comment) => comment.user)
+  comment: Comment;
+
+  @ManyToMany(() => Post, (post) => post.likes)
+  likes: Post[];
+
+  /**
+   * Changelog
+   */
+  @CreateDateColumn({ type: 'timestamp' })
+  @Expose({ name: 'created_at' })
+  createdAt!: Date;
+
+  @Column({ nullable: true })
+  @Expose({ name: 'created_by' })
+  createdBy!: number;
+
+  @UpdateDateColumn({ nullable: true, type: 'timestamp' })
+  @Expose({ name: 'updated_at' })
+  updatedAt!: Date;
+
+  @Column({ nullable: true })
+  @Expose({ name: 'updated_by' })
+  updatedBy!: number;
+
+  @ManyToMany(() => User, (user) => user.followers)
+  @JoinTable()
+  following: User[];
+
+  @ManyToMany(() => User, (user) => user.following)
+  followers: User[];
+
+  /**
+   * Soft deletion
+   */
+  @DeleteDateColumn({
+    type: 'timestamp',
+    default: null,
+    nullable: true,
+  })
+  @Expose({ name: 'deleted_at' })
+  deletedAt!: Date;
+
+  @Column({ default: null, nullable: true })
+  @Expose({ name: 'deleted_by' })
+  deletedBy!: number;
 }
