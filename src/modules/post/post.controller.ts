@@ -21,7 +21,9 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto, @Req() req: Request) {}
+  create(@Body() createPostDto: CreatePostDto, @Req() req: Request) {
+    console.log('Hoallo brooooo');
+  }
 
   @Get()
   findAll() {
