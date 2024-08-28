@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { AppService } from './app.service';
-import { CreateUserDto } from './user/dto/create-user.dto';
-import { CobaDto } from './user/dto/coba.dto';
+import { CreateUserDto } from './modules/user/dto/create-user.dto';
+import { CobaDto } from './modules/user/dto/coba.dto';
 
 @Controller()
 export class AppController {

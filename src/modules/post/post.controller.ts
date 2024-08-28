@@ -13,7 +13,6 @@ import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Request } from 'express';
-import { User } from 'src/user/entities/user.entity';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
