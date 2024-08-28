@@ -3,20 +3,21 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
-  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Expose } from 'class-transformer';
+import { Post } from './post.entity';
 import { Comment } from './comment.entity';
-import { Hashtag } from './hashtag.entity';
 
 @Entity()
-export class Post {
+export class Hashtag {
   /**
    * Column
    */
@@ -24,27 +25,20 @@ export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar' })
-  title: string;
-
   @Column({ type: 'text' })
-  content: string;
+  title: string;
 
   /**
    * Relation
    */
-  @ManyToOne(() => User, (user) => user.posts)
-  creatorId: User;
 
-  @ManyToMany(() => User, (user) => user.likes)
+  @ManyToMany(() => Post, (post) => post.hashtags)
   @JoinTable()
-  likes: User[];
+  posts: Post[];
 
-  @OneToMany(() => Comment, (comment) => comment.post)
+  @ManyToMany(() => Comment, (comment) => comment.hashtags)
+  @JoinTable()
   comments: Comment[];
-
-  @ManyToMany(() => Hashtag, (hashtags) => hashtags.comments)
-  hashtags: Hashtag[];
 
   /**
    * Changelog
